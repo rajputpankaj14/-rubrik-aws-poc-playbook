@@ -211,6 +211,20 @@ details > p:first-of-type{margin-top: 0}
 .note.warn{border-left-color: #b08400; background: #fff8e1; color: #5a4500}
 .note.danger{border-left-color: #b22222; background: #ffe9e3; color: #6a0a0a}
 p.small{font-size: 12px; color: var(--muted-2); margin: 6px 0 0; line-height: 1.55}
+.poc-check{margin:14px 0 8px}
+.poc-check h3{margin:22px 0 8px; font-size:15px}
+.poc-check h3:first-of-type{margin-top:10px}
+label.ck{display:flex; gap:10px; align-items:flex-start; padding:8px 11px; border:1px solid var(--rule); border-radius:7px; margin:6px 0; font-size:13.5px; line-height:1.5; cursor:pointer; background:#fff}
+label.ck:hover{background:#faf9f6}
+label.ck input{margin-top:2px; width:15px; height:15px; flex:none; accent-color:#00b388; cursor:pointer}
+label.ck.done{background:#f2faf5; border-color:#b7e0c6; color:var(--muted)}
+.poc-bar{display:flex; align-items:center; gap:12px; margin:8px 0 6px; font-family:var(--mono); font-size:12px; position:sticky; top:0; background:var(--bg,#fff); padding:6px 0; z-index:2}
+.poc-bar-track{flex:1; height:8px; background:var(--rule); border-radius:99px; overflow:hidden}
+.poc-bar-fill{height:100%; width:0; background:#00b388; border-radius:99px; transition:width .2s}
+.poc-bar-label{white-space:nowrap; color:var(--ink-3); font-weight:600}
+.poc-reset{font:inherit; font-size:11px; padding:3px 10px; border:1px solid var(--rule); border-radius:6px; background:#fff; cursor:pointer; color:var(--muted)}
+.poc-reset:hover{background:#f4f4f2}
+@media print{ .poc-reset{display:none} .poc-bar{position:static} label.ck{break-inside:avoid} }
 
 .ref-table{
   width: 100%; border-collapse: separate; border-spacing: 0;
@@ -579,6 +593,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
     <li><a href="#/aws/reference/firewall" data-route="/aws/reference/firewall">Firewall ports + FQDNs</a></li>
     <li><a href="#/aws/reference/costs" data-route="/aws/reference/costs">Cost optimisation</a></li>
     <li><a href="#/aws/reference/troubleshooting" data-route="/aws/reference/troubleshooting">Troubleshooting</a></li>
+    <li><a href="#/aws/checklist" data-route="/aws/checklist">POC checklist</a></li>
   </ul>
 </div>
 <div class="nav-group" data-group="azure" data-cloud="azure">
@@ -620,6 +635,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <ul class="nav-list">
     <li><a href="#/azure/reference/firewall" data-route="/azure/reference/firewall">Firewall + FQDNs</a></li>
     <li><a href="#/azure/reference/costs" data-route="/azure/reference/costs">Cost optimisation</a></li>
+    <li><a href="#/azure/checklist" data-route="/azure/checklist">POC checklist</a></li>
   </ul>
 </div>
 <div class="nav-group" data-group="gcp" data-cloud="gcp">
@@ -631,6 +647,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
     <li><a href="#/gcp/onboard" data-route="/gcp/onboard">Onboard CNP</a></li>
     <li><a href="#/gcp/workloads/gce" data-route="/gcp/workloads/gce">GCE + Persistent Disks</a></li>
     <li><a href="#/gcp/cces-pointer" data-route="/gcp/cces-pointer">When to deploy CCES on GCP</a></li>
+    <li><a href="#/gcp/checklist" data-route="/gcp/checklist">POC checklist</a></li>
   </ul>
 </div>
   <div class="sidebar-foot" style="margin-top:20px; padding:14px 4px 4px; border-top:1px solid var(--rule); font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.5;">
@@ -724,22 +741,6 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 <h2 class="section-title">How to use this playbook</h2>
 <p style="color:var(--muted); max-width:72ch; margin:-2px 0 18px;">A guided build sequence, not a reference dump. Each cloud is self-contained &mdash; pick one and work top to bottom. <strong style="color:var(--ink-3);">Last updated: 31 Jul 2026.</strong></p>
 
-<details style="margin:0 0 22px; max-width:72ch;"><summary><strong>What changed in v1.2 (31 Jul 2026)</strong></summary>
-<ul>
-  <li><strong>GCP Cloud SQL (PostgreSQL) is now supported via CNP</strong> (GA Apr 2026): backup, immutable archival, RCV backup tier. No PITR yet; MySQL/SQL Server are roadmap. The old "GCE + PD only" framing is gone.</li>
-  <li><strong>Version refresh:</strong> current CDM is 9.5.x (was 9.4). Re-verify CCES node sizing against the 9.5 guide.</li>
-  <li><strong>New AWS coverage notes:</strong> S3/Iceberg tables (separate snappable), agent-based DB backup on EC2, and an emerging Cloud Files path for FSx/EFS.</li>
-  <li><strong>New AWS deployment model:</strong> Rubrik Managed Cloud Protection (RMCP / BaaS / Rubrik-hosted Exocompute), GA 30 Jun 2026. Rubrik runs compute and storage in its own account; customer grants one IAM role and skips VPC/endpoints/Exocompute/archival. Added as decision 0 on the AWS Decisions page, with a callout on the AWS overview.</li>
-  <li><strong>Exocompute options added:</strong> Private Exocompute (no public K8s API endpoint) and Customer-Managed Exocompute (CME) across AWS and Azure.</li>
-  <li><strong>Azure version watch:</strong> AKS 1.33 reached EOL on 31 Jul 2026 — dated note added to the Azure Exocompute page.</li>
-  <li><strong>RCV and workload support</strong> are now framed as "verify on the live compat matrix" rather than hard-coded, since they change monthly.</li>
-  <li><strong>Multiple Archival Locations (MAL):</strong> added to the AWS and Azure archival pages — two archive locations per SLA, Selective Frequency Archival (GA Mar 2026), for real 3-2-1.</li>
-  <li><strong>AWS Role Chaining Account:</strong> added to the Identity page — customer-side single control point for granting/revoking Rubrik access across all mapped accounts or a whole AWS Org.</li>
-  <li><strong>AWS Exocompute IP Address Reduction:</strong> noted on the Network page — Pod CIDR via AWS Custom Networking means smaller subnets than the old /24–/22 guidance.</li>
-  <li><strong>Azure PaaS-DB gap:</strong> flagged on the Azure overview — PostgreSQL/MySQL Flexible Server and Cosmos DB (PaaS) are not supported today (roadmap only).</li>
-</ul>
-<p class="small">Items tagged "verify" in the pages are check-items, not confirmed facts. Confirm against the live compat matrix before quoting a customer.</p>
-</details>
 <div class="cross-cloud-grid">
   <div class="cross-cloud-card">
     <h4>1 &middot; Pick your cloud</h4>
@@ -813,6 +814,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <a class="tile tile-aws" href="#/aws/reference/firewall"><div class="tile-num">4.1</div><h3>Firewall ports + FQDNs</h3><p>The complete allowlist incl. cloudslab.</p></a>
   <a class="tile tile-aws" href="#/aws/reference/costs"><div class="tile-num">4.2</div><h3>Cost optimisation</h3><p>NAT vs endpoints, archive tiers.</p></a>
   <a class="tile tile-aws" href="#/aws/reference/troubleshooting"><div class="tile-num">4.3</div><h3>Troubleshooting</h3><p>The top 10 things that go wrong.</p></a>
+  <a class="tile tile-aws" href="#/aws/checklist"><div class="tile-num">4.4</div><h3>POC checklist</h3><p>Tick off every step. Progress saved, print-friendly.</p></a>
 </div>
 
 <h2 class="section-title">Architecture at a glance</h2>
@@ -974,12 +976,12 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 <p>Since 30 Jun 2026 there are two ways to deploy AWS CNP. This choice gates everything else.</p>
 <p><strong>Rubrik Managed Cloud Protection (RMCP / BaaS / Rubrik-hosted Exocompute):</strong> Rubrik runs the Exocompute and the storage in Rubrik-owned AWS accounts (dedicated per customer, 1:1). The customer deploys one CloudFormation stack that creates a single cross-account IAM role (resource access to EC2/S3/RDS only), picks a hosting region, and protection starts. No EKS, no VPC, no VPC endpoints, no archival bucket. Storage is Rubrik Cloud Vault (Backup tier equivalent), Object Lock Compliance by default, multi-zone redundant. Snapshots are taken natively in the customer account, then hosted Exocompute reads them cross-account over the AWS backbone (no public internet, no peering/VPN) and archives to the immutable vault.</p>
 <ul>
-  <li><strong>GA workloads:</strong> EC2/EBS, RDS (incl. Aurora), S3. EC2 is crash-consistent only in v1. DynamoDB, BYOK, BYO storage, and cross-region are roadmap (Q3 FY27 tentative — do not commit dates).</li>
+  <li><strong>Supported workloads:</strong> EC2/EBS, RDS (including Aurora), and S3. EC2 is crash-consistent.</li>
   <li><strong>Platforms:</strong> SaaS only (RSC-C / RSC-G). RSC-P is always customer-hosted.</li>
   <li><strong>Best for:</strong> teams that want zero backup infrastructure and a same-day POC. This is the fastest path to a first protected workload.</li>
 </ul>
 <p><strong>Customer-hosted (the rest of this playbook):</strong> Exocompute and storage live in the customer's own AWS account. Choose this when data residency or sovereignty policy requires backups to stay inside the customer's own AWS Organization. That is the common driver for regulated APJ finance and government accounts. Also required for RSC-P.</p>
-<p class="small">One AWS account cannot use both models, but a customer can mix (some accounts BaaS, some customer-hosted). Once an account is on RMCP, all eligible workloads on it must use RMCP SLAs. Verify current RMCP workload scope and roadmap on the live compat matrix and the RMCP FAQ before quoting.</p>
+<p class="small">One AWS account cannot use both models, but a customer can mix (some accounts BaaS, some customer-hosted). Once an account is on RMCP, all eligible workloads on it must use RMCP SLAs. Confirm current RMCP workload scope on the live compat matrix before quoting.</p>
 </details>
 
 <details><summary><strong>1. Single-account or multi-account model? (customer-hosted)</strong></summary>
@@ -1703,9 +1705,9 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 <p>Required for transactional databases running in EC2 (SQL Server, Oracle, etc.). Adds modest latency vs crash-consistent — exact overhead depends on the pre/post-script the customer configures.</p>
 </details>
 
-<details><summary><strong>Agent-based database backup on EC2 (newer path)</strong></summary>
-<p>Beyond crash-consistent and RBS app-consistent snapshots, RSC now offers agent-based database backup for SQL Server / Oracle running on EC2, which extends the CNP BaaS model to true application-level DB protection (log backups, granular DB restore) rather than just quiescing a disk snapshot. This is a distinct capability from the app-consistent snapshot above.</p>
-<p class="small">Verify the current GA state and supported engines on the live compat matrix before scoping a POC around it.</p>
+<details><summary><strong>Agent-based database backup on EC2</strong></summary>
+<p>Beyond crash-consistent and RBS app-consistent snapshots, RSC offers agent-based database backup for SQL Server / Oracle running on EC2, giving true application-level DB protection (log backups, granular DB restore) rather than just quiescing a disk snapshot. This is a distinct capability from the app-consistent snapshot above.</p>
+<p class="small">Confirm the supported engines on the live compat matrix before scoping a POC around it.</p>
 </details>
 
 <details><summary><strong>Cross-region replication</strong></summary>
@@ -2421,17 +2423,6 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 <p>Both Backup AND Archive tiers supported (one of the few workloads where RCV supports both). Multi-zone redundancy (MAZ) also supported for both tiers. RCV support changes often, so confirm on the live compat matrix before quoting.</p>
 </details>
 
-<details><summary><strong>Iceberg tables — a separate snappable (know the difference)</strong></summary>
-<p>Plain S3 protection backs up the raw objects. It has no idea those objects form an Iceberg table. If you restore raw S3 objects, the files come back but the table stays broken, because nothing updates the catalog to point at the restored files. A query engine like Athena or Snowflake would not see a working table.</p>
-<p>RSC now has a dedicated <strong>Iceberg</strong> snappable that backs up the Parquet/Avro data files, the Iceberg metadata and manifests, and the Glue catalog entry, and compacts small files on the way in. Data files counted under Iceberg are not double-counted under S3 for buckets you also protect. Use the Iceberg snappable, not generic S3, when the customer runs Iceberg tables on S3.</p>
-<p class="small">GA is landing in the Aug 2026 window per the roadmap. Verify current state on the live compat matrix before you commit to it in a POC.</p>
-</details>
-
-<details><summary><strong>Cloud Files (FSx + EFS) — the NAS story is changing</strong></summary>
-<p>Historically AWS file services (EFS, FSx) could only be protected with CCES / NAS Cloud Direct, not cloud-native. That is shifting: a Cloud Files path for FSx and EFS is coming into RSC as a cloud-native ("NCD") workload. If a customer asks about protecting EFS or FSx, do not reflexively say "CCES only" any more.</p>
-<p class="small">Confirm the current GA state on the live compat matrix. Until it is GA in your region, CCES / NAS Cloud Direct remains the answer.</p>
-</details>
-
 <div class="nav-buttons">
   <a class="btn-prev" href="#/aws/workloads/dynamo">← DynamoDB</a>
   <a class="btn-next" href="#/aws/reference/firewall">Next: Firewall reference →</a>
@@ -2633,6 +2624,70 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 </div>
 
 </article>
+<article class="page" data-route="/aws/checklist" data-group="aws-reference">
+  <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>4 · Reference</span><span class="sep">/</span><span>POC checklist</span></div>
+  <header class="page-head"><h1>AWS POC checklist</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
+<p class="lede">Work top to bottom. Ticks are saved in your browser, so you can close and come back. Tick only the workloads in scope. Print this page to hand the customer a clean success-criteria sheet.</p>
+
+<div class="poc-check" data-scope="aws">
+  <div class="poc-bar"><div class="poc-bar-track"><div class="poc-bar-fill"></div></div><span class="poc-bar-label">0 / 0</span><button class="poc-reset" type="button">Reset</button></div>
+
+  <h3>0 · Deployment model</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-model"> Chosen: Rubrik-managed (BaaS) or customer-hosted. If BaaS, skip most of Foundation below — you just grant one IAM role and jump to Workloads.</label>
+
+  <h3>1 · Foundation (customer-hosted)</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-f1"> Nine decisions documented (accounts, regions, workloads, onboarding method, Org integration, Exocompute location, archive location, CMK inventory, egress)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f2"> Onboarding admin has elevated rights (PowerUserAccess + iam:* for the POC)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f3"> RSC tenant URL + static IPs captured for the firewall allowlist</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f4"> SCPs audited for denies on iam:AssumeRole / ec2:RunInstances / s3:CreateBucket / kms:Decrypt</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f5"> VPC has DNS resolution AND DNS hostnames enabled</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f6"> Two subnets in different AZs, no CIDR overlap with on-prem/peered VPCs</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f7"> Outbound egress in place (NAT GW / Network Firewall / TGW) + 0.0.0.0/0 route on the Exocompute subnet</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f8"> VPC endpoints built (S3 GW, EBS, EC2, ECR api+dkr, EKS, STS, KMS, AutoScaling; DynamoDB GW if in scope)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-f9"> CMK key policies grant the Rubrik role (only if EBS/RDS/S3 use customer-managed keys)</label>
+
+  <h3>2 · Onboard</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-o1"> Host account onboarded first (Exocompute + storage), status Connected</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-o2"> Workload accounts onboarded with the right use cases ticked</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-o3"> Exocompute configured (region, VPC, two subnets)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-o4"> Worker-node SG added to inbound 443 on every interface endpoint (the step everyone misses)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-o5"> Archival location created (S3 bucket; Object Lock on if production)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-o6"> Workload accounts mapped to the host Exocompute</label>
+
+  <h3>3 · Workloads (tick what's in scope)</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-w1"> EC2 / EBS: on-demand snapshot + indexing + file-level restore</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-w2"> RDS / Aurora: snapshot + restore to a new instance</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-w3"> DynamoDB: PITR enabled, export-to-S3 backup + restore</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-w4"> S3: versioning on, backup + object-level restore</label>
+
+  <h3>4 · Recovery validation</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-v1"> End-to-end proven: snapshot → indexing started → indexing complete (proves IAM + mapping + endpoints)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r1"> EC2/EBS restore in place (preserves InstanceId + private IP)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r2"> EC2/EBS export to a new instance (cross-account export too, if in scope — CMK pre-shared)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r3"> File-level recovery from a local snapshot</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r4"> File-level recovery from an archived snapshot (Standard-IA / Glacier) — confirm rehydration latency; Glacier Deep Archive can be 12+ hours</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r5"> Cross-region restore (only if replication is in the SLA)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r6"> RDS / Aurora: restore to a new instance + point-in-time restore</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r7"> DynamoDB: restore to a new table</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r8"> RCV recovery tested if in scope — Backup tier is quick; Archive tier is hours-to-days, don't position it as the sole BCDR path</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-r9"> Recovery time captured as RTO evidence for the customer</label>
+
+  <h3>5 · Enterprise Edition / security operators (if EE licensed — verify support on the compat matrix)</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-e1"> Anomaly Detection enabled on EC2/EBS and/or S3, baseline built, a result reviewed (scans before archival, not archived snapshots; not available for RDS/DynamoDB)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-e2"> Threat Monitoring enabled on the AWS cloud account (hash-based IOC scan) and a scan result shown</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-e4"> Sensitive Data Discovery / DSPM demonstrated where in scope</label>
+
+  <h3>6 · Exit</h3>
+  <label class="ck"><input type="checkbox" data-ck="aws-v3"> NAT GW BytesOutToDestination near-zero after first job (endpoints wired correctly)</label>
+  <label class="ck"><input type="checkbox" data-ck="aws-v4"> Success criteria signed off with the customer</label>
+</div>
+
+<div class="nav-buttons">
+  <a class="btn-prev" href="#/aws/reference/troubleshooting">← Troubleshooting</a>
+  <a class="btn-next" href="#/">Back to home →</a>
+</div>
+
+</article>
 <article class="page" data-route="/azure/" data-group="azure">
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>Azure — Overview</span><span class="sep">/</span><span>Azure Overview</span></div>
   <header class="page-head"><h1>Azure Overview</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
@@ -2644,7 +2699,7 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 </div>
 
 <div class="note">
-<strong>Know the Azure PaaS-DB gap before the meeting.</strong> Rubrik protects Azure SQL Database and SQL Managed Instance. It does <strong>not</strong> protect Azure Database for PostgreSQL / MySQL Flexible Server or Cosmos DB (PaaS) today — confirmed as unsupported in July 2026. Those engines are protectable only on IaaS VMs via Managed Volumes with a Cloud Cluster in-subscription. Azure PostgreSQL Flexible Server (PaaS) is in design (extending the AWS RDS pg_dump model), so treat it as roadmap, not GA. Don't say yes to PostgreSQL/MySQL/Cosmos PaaS without checking the live compat matrix.
+<strong>Azure database scope.</strong> Rubrik protects Azure SQL Database and Azure SQL Managed Instance. Azure Database for PostgreSQL / MySQL Flexible Server and Cosmos DB (PaaS) are not supported today; those engines are protectable on IaaS VMs via Managed Volumes with a Cloud Cluster in-subscription. Confirm the current supported list on the live compat matrix before scoping.
 </div>
 
 <h2 class="section-title">Phase 1 — Foundation</h2>
@@ -2676,6 +2731,7 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 <div class="tile-grid">
   <a class="tile tile-azure" href="#/azure/reference/firewall"><div class="tile-num">4.1</div><h3>Firewall + FQDNs</h3><p>Public + Government endpoint allowlists.</p></a>
   <a class="tile tile-azure" href="#/azure/reference/costs"><div class="tile-num">4.2</div><h3>Cost optimisation</h3><p>Service Endpoint vs Private Endpoint, NAT GW vs Firewall.</p></a>
+  <a class="tile tile-azure" href="#/azure/checklist"><div class="tile-num">4.3</div><h3>POC checklist</h3><p>Tick off every step. Progress saved, print-friendly.</p></a>
 </div>
 
 <h2 class="section-title">Architecture at a glance</h2>
@@ -4098,6 +4154,66 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 </div>
 
 </article>
+<article class="page" data-route="/azure/checklist" data-group="azure-reference">
+  <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>4 · Reference</span><span class="sep">/</span><span>POC checklist</span></div>
+  <header class="page-head"><h1>Azure POC checklist</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
+<p class="lede">Work top to bottom. Ticks are saved in your browser. Tick only the workloads in scope. Print this page to hand the customer a clean success-criteria sheet.</p>
+
+<div class="poc-check" data-scope="azure">
+  <div class="poc-bar"><div class="poc-bar-track"><div class="poc-bar-fill"></div></div><span class="poc-bar-label">0 / 0</span><button class="poc-reset" type="button">Reset</button></div>
+
+  <h3>1 · Foundation</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-f1"> Decisions documented (subscription model, regions, workloads, onboarding, Exocompute location, CMK)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f2"> Onboarding admin: Owner or User Access Administrator on the subscription</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f3"> Onboarding admin has an Entra ID role that can consent to apps (or a Global Admin consents)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f4"> "Allow user consent for apps" enabled in Entra ID (or a Global Admin will consent)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f5"> Microsoft Graph perms for Exocompute OAuth (Group.ReadWrite.All, GroupMember.ReadWrite.All)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f6"> Resource Providers registered (Compute, Storage, Network, ContainerService, ContainerRegistry, Insights, KeyVault/Sql if in scope)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f7"> VNet + /25 AKS subnet + /18 Pod CIDR, no overlap</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f8"> Outbound egress (NAT Gateway recommended — avoids SNAT exhaustion)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f9"> Service Endpoint Microsoft.Storage on the AKS subnet (+ KeyVault / Sql if in scope)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-f10"> Key Vault permissions for ADE / CMK (only if disks or archive use customer keys)</label>
+
+  <h3>2 · Onboard</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-o1"> Host subscription onboarded (OAuth, RSCAzure app consented), status Connected</label>
+  <label class="ck"><input type="checkbox" data-ck="az-o2"> Workload subscriptions onboarded</label>
+  <label class="ck"><input type="checkbox" data-ck="az-o3"> Exocompute configured (region, VNet, /25 subnet, Pod CIDR)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-o4"> Archival Storage Account created (versioning + version-level immutability on)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-o5"> Workload subscriptions mapped to the host Exocompute</label>
+
+  <h3>3 · Workloads (tick what's in scope)</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-w1"> Azure VMs + disks: snapshot + indexing + file-level restore</label>
+  <label class="ck"><input type="checkbox" data-ck="az-w2"> Azure SQL DB / MI: persistent backup + restore (CDC enabled for MI)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-w3"> Azure Blob: versioning on, backup + restore, cloudslab FQDN allowlisted</label>
+  <label class="ck"><input type="checkbox" data-ck="az-w4"> ADLS Gen2: dfs.core.windows.net allowlisted, backup + restore</label>
+
+  <h3>4 · Recovery validation</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-v1"> End-to-end proven: snapshot → indexing started → indexing complete</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r1"> VM restore in place + export to a new VM</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r2"> File-level recovery from a local snapshot</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r3"> File-level recovery from an archived snapshot — confirm rehydration latency (Azure Archive tier is 5–15 hours)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r4"> Cross-region restore (only if replication is in the SLA)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r5"> Azure SQL DB / MI: restore to a new database or instance (+ PITR if in scope)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r6"> Blob / ADLS: object-level restore, in-place and out-of-place</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r7"> RCV recovery tested if in scope — Backup tier quick; Archive tier hours-to-days</label>
+  <label class="ck"><input type="checkbox" data-ck="az-r8"> Recovery time captured as RTO evidence for the customer</label>
+
+  <h3>5 · Enterprise Edition / security operators (if EE licensed — verify support on the compat matrix)</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-e1"> Anomaly Detection enabled on VMs/disks and/or Blob, baseline built, a result reviewed (not available for Azure SQL)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-e2"> Threat Monitoring enabled on the subscription (hash-based IOC scan) and a result shown</label>
+  <label class="ck"><input type="checkbox" data-ck="az-e4"> Sensitive Data Discovery / DSPM on Blob where in scope</label>
+
+  <h3>6 · Exit</h3>
+  <label class="ck"><input type="checkbox" data-ck="az-v3"> Firewall allowlist verified (AKS control-plane FQDNs + cloudslab + googleapis)</label>
+  <label class="ck"><input type="checkbox" data-ck="az-v4"> Success criteria signed off with the customer</label>
+</div>
+
+<div class="nav-buttons">
+  <a class="btn-prev" href="#/azure/reference/costs">← Costs</a>
+  <a class="btn-next" href="#/azure/">Back to Azure home →</a>
+</div>
+
+</article>
 <article class="page" data-route="/gcp/" data-group="gcp">
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>GCP</span><span class="sep">/</span><span>GCP Overview</span></div>
   <header class="page-head"><h1>GCP Overview</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
@@ -4105,7 +4221,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <div class="hero">
   <div class="eyebrow">Rubrik GCP · POC Playbook</div>
   <h1>Rubrik on Google Cloud — <em>scope-first</em></h1>
-  <p>GCP CNP scope is narrower than AWS/Azure, but it is growing: <strong>GCE instances, Persistent Disks, and now Cloud SQL (PostgreSQL)</strong>. Cloud SQL Postgres went GA in April 2026. For SQL Server/Oracle/SAP HANA/Filesets on GCP, customers still deploy CCES (Rubrik CDM in GCE). Start here to figure out which path you need. <span style="color:var(--muted-2);">(GCS and BigQuery are on the roadmap, not GA. Verify current state on the live compat matrix before quoting.)</span></p>
+  <p>GCP CNP scope is narrower than AWS/Azure: <strong>GCE instances, Persistent Disks, and Cloud SQL (PostgreSQL)</strong>. Cloud SQL Postgres went GA in April 2026. For SQL Server/Oracle/SAP HANA/Filesets on GCP, customers deploy CCES (Rubrik CDM in GCE). Start here to figure out which path you need.</p>
 </div>
 
 <h2 class="section-title">Decision tree first</h2>
@@ -4118,7 +4234,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <h2 class="section-title">CNP workloads on GCP</h2>
 <div class="tile-grid">
   <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4</div><h3>GCE instances + PD</h3><p>Snapshot-based. File indexing via Exocompute on GKE.</p></a>
-  <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4b</div><h3>Cloud SQL (Postgres)</h3><p>GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR yet; MySQL is roadmap.</p></a>
+  <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4b</div><h3>Cloud SQL (Postgres)</h3><p>GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR.</p></a>
 </div>
 
 <h2 class="section-title">For everything else: CCES on GCP</h2>
@@ -4248,11 +4364,9 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <tbody>
 <tr><td>Google Compute Engine (GCE) instances</td><td>Yes — snapshot-based</td></tr>
 <tr><td>Persistent Disks</td><td>Yes — snapshot-based</td></tr>
-<tr><td>Cloud SQL — PostgreSQL</td><td><strong>Yes</strong> — GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR yet.</td></tr>
-<tr><td>Cloud SQL — MySQL / SQL Server</td><td>Roadmap — not GA. Verify on the compat matrix.</td></tr>
-<tr><td>Google Cloud Storage (GCS) buckets</td><td>Roadmap (H2 FY26) — not GA yet</td></tr>
-<tr><td>BigQuery</td><td>Roadmap — not GA yet</td></tr>
-<tr><td>Firestore, Spanner, Bigtable</td><td><strong>NO</strong> — no Rubrik CNP path today</td></tr>
+<tr><td>Cloud SQL — PostgreSQL</td><td><strong>Yes</strong> — GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR.</td></tr>
+<tr><td>Cloud SQL — MySQL / SQL Server</td><td>Not supported via CNP</td></tr>
+<tr><td>Google Cloud Storage, BigQuery, Firestore, Spanner, Bigtable</td><td>Not supported via CNP</td></tr>
 </tbody>
 </table>
 </details>
@@ -4278,11 +4392,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <strong>Most GCP customers end up deploying CCES, not CNP.</strong> If the customer is on GCP because they run SQL Server, Oracle, or SAP HANA in GCE — that's CCES, not this playbook. Use the dedicated CCES on GCP setup guide instead.
 </div>
 
-<p>If your customer's GCP scope is <strong>GCE snapshots, persistent disks, or Cloud SQL Postgres</strong> — proceed with CNP. If they run SQL Server, Oracle, SAP HANA, or need filesets/GCVE, that's CCES.</p>
-
-<div class="note">
-<strong>Watch this space.</strong> Cloud SQL Postgres shipped in April 2026 and the GCP CNP roadmap keeps moving (GCS and BigQuery are next). The "GCP does almost nothing" reflex is out of date. Check the live compat matrix before you tell a customer no.
-</div>
+<p>If your customer's GCP scope is <strong>GCE snapshots, persistent disks, or Cloud SQL Postgres</strong> — proceed with CNP. If they run SQL Server, Oracle, SAP HANA, or need filesets/GCVE, that's CCES. Always confirm the current supported list on the live compat matrix.</p>
 
 <div class="nav-buttons">
   <a class="btn-prev" href="#/gcp/">← GCP overview</a>
@@ -4597,14 +4707,13 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 </details>
 
 <details><summary><strong>Cloud SQL (Postgres) — now supported via CNP</strong></summary>
-<p>Cloud SQL for PostgreSQL went GA in April 2026. It is a different model from disk snapshots: RSC takes a native Cloud SQL backup, then Exocompute on GKE spins up a temporary Cloud SQL instance, runs pg_dump, and streams the logical dump to GCS. Backup, immutable archival, RCV backup tier, Multiple Archival Locations, Static Retention, and Retention Lock are all supported. PITR is not supported in the initial release. MySQL and SQL Server engines are roadmap, not GA. Verify the current engine list on the live compat matrix.</p>
+<p>Cloud SQL for PostgreSQL went GA in April 2026. It is a different model from disk snapshots: RSC takes a native Cloud SQL backup, then Exocompute on GKE spins up a temporary Cloud SQL instance, runs pg_dump, and streams the logical dump to GCS. Backup, immutable archival, RCV backup tier, Multiple Archival Locations, Static Retention, and Retention Lock are all supported. PITR is not supported. The supported engine is PostgreSQL; confirm the current engine list on the live compat matrix.</p>
 </details>
 
-<details><summary><strong>What's still NOT supported via CNP on GCP</strong></summary>
+<details><summary><strong>What is NOT supported via CNP on GCP</strong></summary>
 <ul>
-  <li>GCS bucket protection — roadmap (H2 FY26), not GA yet. Today: use GCS native versioning + object retention.</li>
-  <li>BigQuery — roadmap, not GA yet.</li>
-  <li>Firestore, Spanner, Bigtable — no Rubrik CNP path today.</li>
+  <li>Google Cloud Storage bucket protection — today: use GCS native versioning + object retention.</li>
+  <li>BigQuery, Firestore, Spanner, Bigtable.</li>
   <li>SQL Server / Oracle / SAP HANA / filesets in GCE — CCES, not CNP.</li>
 </ul>
 </details>
@@ -4768,6 +4877,50 @@ This page is a pointer, not a full CCES playbook. For a step-by-step CCES on GCP
 </div>
 
 </article>
+<article class="page" data-route="/gcp/checklist" data-group="gcp">
+  <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>GCP</span><span class="sep">/</span><span>POC checklist</span></div>
+  <header class="page-head"><h1>GCP POC checklist</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
+<p class="lede">GCP CNP scope is narrower. Confirm the path first (CNP vs CCES), then work down. Ticks are saved in your browser.</p>
+
+<div class="poc-check" data-scope="gcp">
+  <div class="poc-bar"><div class="poc-bar-track"><div class="poc-bar-fill"></div></div><span class="poc-bar-label">0 / 0</span><button class="poc-reset" type="button">Reset</button></div>
+
+  <h3>0 · Path</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-p1"> Path decided: CNP (GCE, PD, Cloud SQL Postgres) vs CCES (SQL Server / Oracle / SAP HANA / filesets / GCVE)</label>
+
+  <h3>1 · Foundation</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-f1"> Project + service account created; IAM roles (or custom role) assigned</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-f2"> Private Google Access enabled on the subnet</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-f3"> GCS archive bucket (Standard, versioning on, object retention on, soft-delete off)</label>
+
+  <h3>2 · Onboard</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-o1"> Project onboarded to RSC (service-account JSON key), permissions validated</label>
+
+  <h3>3 · Workloads (tick what's in scope)</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-w1"> GCE + Persistent Disks: snapshot + indexing + file-level restore</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-w2"> Cloud SQL (Postgres): backup + immutable archival + restore (no PITR yet)</label>
+
+  <h3>4 · Recovery validation</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-v1"> Snapshot + indexing complete on a GCE instance</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-r1"> GCE restore in place + export to a new instance</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-r2"> File-level recovery to a GCS bucket (local snapshot)</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-r3"> Recovery from an archived snapshot — RSC launches a GKE cluster to restore from archive; confirm rehydration latency</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-r4"> Cloud SQL (Postgres): restore/export to a new instance from an archived snapshot (if in scope)</label>
+  <label class="ck"><input type="checkbox" data-ck="gcp-r5"> Recovery time captured as RTO evidence for the customer</label>
+
+  <h3>5 · Enterprise Edition / security operators (if EE licensed)</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-e1"> Anomaly Detection / Threat Monitoring on GCE (if in scope) — confirm current support on the compat matrix</label>
+
+  <h3>6 · Exit</h3>
+  <label class="ck"><input type="checkbox" data-ck="gcp-v3"> Success criteria signed off with the customer</label>
+</div>
+
+<div class="nav-buttons">
+  <a class="btn-prev" href="#/gcp/cces-pointer">← CCES pointer</a>
+  <a class="btn-next" href="#/">Back to cloud picker →</a>
+</div>
+
+</article>
 </div></main>
 </div>
 <script>
@@ -4812,6 +4965,40 @@ This page is a pointer, not a full CCES playbook. For a step-by-step CCES on GCP
   showRoute(location.hash);
 })();
 
+</script>
+
+<script>
+// POC checklist — persist ticks in the browser + live progress bar
+(function(){
+  var KEY='cnp-poc-checklist-v1';
+  var store={};
+  try{ store=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ store={}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+  function paintRow(cb){ var l=cb.closest('label.ck'); if(l) l.classList.toggle('done', cb.checked); }
+  function updateBar(box){
+    var boxes=box.querySelectorAll('input[type=checkbox][data-ck]');
+    var done=0; boxes.forEach(function(b){ if(b.checked) done++; });
+    var pct=boxes.length? Math.round(done/boxes.length*100):0;
+    var fill=box.querySelector('.poc-bar-fill'); if(fill) fill.style.width=pct+'%';
+    var lab=box.querySelector('.poc-bar-label'); if(lab) lab.textContent=done+' / '+boxes.length+'  ('+pct+'%)';
+  }
+  document.querySelectorAll('.poc-check').forEach(function(box){
+    box.querySelectorAll('input[type=checkbox][data-ck]').forEach(function(cb){
+      var k=cb.getAttribute('data-ck');
+      if(store[k]){ cb.checked=true; }
+      paintRow(cb);
+      cb.addEventListener('change', function(){ store[k]=cb.checked; save(); paintRow(cb); updateBar(box); });
+    });
+    var rst=box.querySelector('.poc-reset');
+    if(rst) rst.addEventListener('click', function(){
+      box.querySelectorAll('input[type=checkbox][data-ck]').forEach(function(cb){
+        cb.checked=false; store[cb.getAttribute('data-ck')]=false; paintRow(cb);
+      });
+      save(); updateBar(box);
+    });
+    updateBar(box);
+  });
+})();
 </script>
 
 <script>
