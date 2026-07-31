@@ -210,6 +210,7 @@ details > p:first-of-type{margin-top: 0}
 }
 .note.warn{border-left-color: #b08400; background: #fff8e1; color: #5a4500}
 .note.danger{border-left-color: #b22222; background: #ffe9e3; color: #6a0a0a}
+p.small{font-size: 12px; color: var(--muted-2); margin: 6px 0 0; line-height: 1.55}
 
 .ref-table{
   width: 100%; border-collapse: separate; border-spacing: 0;
@@ -635,9 +636,9 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <div class="sidebar-foot" style="margin-top:20px; padding:14px 4px 4px; border-top:1px solid var(--rule); font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.5;">
     <div style="display:flex; align-items:center; gap:7px;">
       <span style="width:7px;height:7px;border-radius:50%;background:var(--cc);display:inline-block;flex:none;"></span>
-      Last updated: <strong style="color:var(--ink-3);font-weight:600;">01 Jun 2026</strong>
+      Last updated: <strong style="color:var(--ink-3);font-weight:600;">31 Jul 2026</strong>
     </div>
-    <div style="margin-top:4px; color:var(--muted-2);">Multi-Cloud POC Playbook &middot; v1.1</div>
+    <div style="margin-top:4px; color:var(--muted-2);">Multi-Cloud POC Playbook &middot; v1.2</div>
   </div>
 </aside>
 <main><div class="main-inner">
@@ -683,14 +684,14 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <a class="cloud-card cloud-gcp" href="#/gcp/">
     <div class="cloud-card-head">
       <div class="cloud-logo">GCP</div>
-      <div class="cloud-status">Lighter scope</div>
+      <div class="cloud-status">Growing scope</div>
     </div>
     <h3>Google Cloud Platform</h3>
-    <p>Narrower CNP scope — GCE + Persistent Disks only. Most GCP customers deploy CCES (Rubrik CDM in GCE) for in-guest workloads.</p>
+    <p>GCE + Persistent Disks, plus Cloud SQL (Postgres, GA Apr 2026). SQL Server / Oracle / SAP HANA still go via CCES (Rubrik CDM in GCE).</p>
     <ul class="cloud-features">
-      <li>6 pages · CNP-vs-CCES decision tree</li>
+      <li>CNP-vs-CCES decision tree</li>
+      <li>Cloud SQL Postgres: backup + immutable archival + RCV</li>
       <li>Service account, PGA, GCS bucket setup</li>
-      <li>CCES pointer for SQL/Oracle/SAP HANA</li>
     </ul>
     <div class="cloud-card-cta">Open GCP playbook →</div>
   </a>
@@ -721,7 +722,24 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>How to use this playbook</span></div>
   <header class="page-head"><h1>How to use this playbook</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
 <h2 class="section-title">How to use this playbook</h2>
-<p style="color:var(--muted); max-width:72ch; margin:-2px 0 18px;">A guided build sequence, not a reference dump. Each cloud is self-contained &mdash; pick one and work top to bottom. <strong style="color:var(--ink-3);">Last updated: 01 Jun 2026.</strong></p>
+<p style="color:var(--muted); max-width:72ch; margin:-2px 0 18px;">A guided build sequence, not a reference dump. Each cloud is self-contained &mdash; pick one and work top to bottom. <strong style="color:var(--ink-3);">Last updated: 31 Jul 2026.</strong></p>
+
+<details style="margin:0 0 22px; max-width:72ch;"><summary><strong>What changed in v1.2 (31 Jul 2026)</strong></summary>
+<ul>
+  <li><strong>GCP Cloud SQL (PostgreSQL) is now supported via CNP</strong> (GA Apr 2026): backup, immutable archival, RCV backup tier. No PITR yet; MySQL/SQL Server are roadmap. The old "GCE + PD only" framing is gone.</li>
+  <li><strong>Version refresh:</strong> current CDM is 9.5.x (was 9.4). Re-verify CCES node sizing against the 9.5 guide.</li>
+  <li><strong>New AWS coverage notes:</strong> S3/Iceberg tables (separate snappable), agent-based DB backup on EC2, and an emerging Cloud Files path for FSx/EFS.</li>
+  <li><strong>New AWS deployment model:</strong> Rubrik Managed Cloud Protection (RMCP / BaaS / Rubrik-hosted Exocompute), GA 30 Jun 2026. Rubrik runs compute and storage in its own account; customer grants one IAM role and skips VPC/endpoints/Exocompute/archival. Added as decision 0 on the AWS Decisions page, with a callout on the AWS overview.</li>
+  <li><strong>Exocompute options added:</strong> Private Exocompute (no public K8s API endpoint) and Customer-Managed Exocompute (CME) across AWS and Azure.</li>
+  <li><strong>Azure version watch:</strong> AKS 1.33 reached EOL on 31 Jul 2026 — dated note added to the Azure Exocompute page.</li>
+  <li><strong>RCV and workload support</strong> are now framed as "verify on the live compat matrix" rather than hard-coded, since they change monthly.</li>
+  <li><strong>Multiple Archival Locations (MAL):</strong> added to the AWS and Azure archival pages — two archive locations per SLA, Selective Frequency Archival (GA Mar 2026), for real 3-2-1.</li>
+  <li><strong>AWS Role Chaining Account:</strong> added to the Identity page — customer-side single control point for granting/revoking Rubrik access across all mapped accounts or a whole AWS Org.</li>
+  <li><strong>AWS Exocompute IP Address Reduction:</strong> noted on the Network page — Pod CIDR via AWS Custom Networking means smaller subnets than the old /24–/22 guidance.</li>
+  <li><strong>Azure PaaS-DB gap:</strong> flagged on the Azure overview — PostgreSQL/MySQL Flexible Server and Cosmos DB (PaaS) are not supported today (roadmap only).</li>
+</ul>
+<p class="small">Items tagged "verify" in the pages are check-items, not confirmed facts. Confirm against the live compat matrix before quoting a customer.</p>
+</details>
 <div class="cross-cloud-grid">
   <div class="cross-cloud-card">
     <h4>1 &middot; Pick your cloud</h4>
@@ -745,7 +763,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   </div>
   <div class="cross-cloud-card">
     <h4>6 &middot; Source of truth</h4>
-    <p>Grounded in the RSC User Guide, Compatibility Matrix, and HIW papers. Treat version-specific limits as check-items &mdash; verify against the RSC guide before quoting a customer.</p>
+    <p>Grounded in the RSC User Guide, Compatibility Matrix, and HIW papers. Treat version-specific limits, RCV support, and workload support as check-items. Cloud CNP support changes almost monthly, so verify against the live Cloud Data Protection Compatibility Matrix (docs.rubrik.com/en-us/compat_matrix) before quoting a customer.</p>
   </div>
 </div>
 
@@ -761,9 +779,13 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <p>The opinionated path. Decisions, foundation, onboarding, workloads, and the operational reference you actually need. Click any tile below or use the sidebar.</p>
 </div>
 
+<div class="note warn">
+<strong>First decision, before anything below: Rubrik-managed (BaaS) or customer-hosted?</strong> Since 30 Jun 2026, AWS has a fully managed deployment model — <strong>Rubrik Managed Cloud Protection (RMCP)</strong>, aka Rubrik-hosted Exocompute / BaaS. Rubrik runs the Exocompute and the storage in Rubrik-owned AWS accounts. The customer grants one cross-account IAM role via a light CloudFormation stack, picks a region, and protection starts. No EKS, no VPC, no VPC endpoints, no archival bucket to build. If you go RMCP, most of the Foundation phase below (Network, VPC Endpoints, Exocompute, Archival) does not apply. Everything below assumes the customer-hosted model. See <strong>Decisions → choice 0</strong> for how to pick.
+</div>
+
 <h2 class="section-title">Phase 1 — Foundation</h2>
 <div class="tile-grid">
-  <a class="tile tile-aws" href="#/aws/foundation/decisions"><div class="tile-num">1.1</div><h3>Decisions</h3><p>Nine choices you make once. Re-doing these mid-build = re-doing IAM.</p></a>
+  <a class="tile tile-aws" href="#/aws/foundation/decisions"><div class="tile-num">1.1</div><h3>Decisions</h3><p>Start with deployment model (BaaS vs customer-hosted), then the choices you make once. Re-doing these mid-build = re-doing IAM.</p></a>
   <a class="tile tile-aws" href="#/aws/foundation/identity"><div class="tile-num">1.2</div><h3>Identity</h3><p>How Rubrik authenticates into AWS. Cross-account roles + STS chaining.</p></a>
   <a class="tile tile-aws" href="#/aws/foundation/network"><div class="tile-num">1.3</div><h3>Network</h3><p>VPC, subnets, egress, DNS. Per region with Exocompute.</p></a>
   <a class="tile tile-aws" href="#/aws/foundation/endpoints"><div class="tile-num">1.4</div><h3>VPC Endpoints</h3><p>The cost layer. Build BEFORE Exocompute.</p></a>
@@ -946,9 +968,21 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>1 · Foundation</span><span class="sep">/</span><span>Decisions</span></div>
   <header class="page-head"><h1>Decisions</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
 
-<p class="lede">Answer these nine before touching any console. Document the answers. Coming back to change them = re-doing IAM, VPC, and SCP work.</p>
+<p class="lede">Start with choice 0 (deployment model) — if it's Rubrik-managed BaaS, most of the rest doesn't apply. For customer-hosted, answer the nine that follow before touching any console. Document the answers. Coming back to change them = re-doing IAM, VPC, and SCP work.</p>
 
-<details open><summary><strong>1. Single-account or multi-account model?</strong></summary>
+<details open><summary><strong>0. Deployment model: Rubrik-managed (BaaS) or customer-hosted? (decide this first)</strong></summary>
+<p>Since 30 Jun 2026 there are two ways to deploy AWS CNP. This choice gates everything else.</p>
+<p><strong>Rubrik Managed Cloud Protection (RMCP / BaaS / Rubrik-hosted Exocompute):</strong> Rubrik runs the Exocompute and the storage in Rubrik-owned AWS accounts (dedicated per customer, 1:1). The customer deploys one CloudFormation stack that creates a single cross-account IAM role (resource access to EC2/S3/RDS only), picks a hosting region, and protection starts. No EKS, no VPC, no VPC endpoints, no archival bucket. Storage is Rubrik Cloud Vault (Backup tier equivalent), Object Lock Compliance by default, multi-zone redundant. Snapshots are taken natively in the customer account, then hosted Exocompute reads them cross-account over the AWS backbone (no public internet, no peering/VPN) and archives to the immutable vault.</p>
+<ul>
+  <li><strong>GA workloads:</strong> EC2/EBS, RDS (incl. Aurora), S3. EC2 is crash-consistent only in v1. DynamoDB, BYOK, BYO storage, and cross-region are roadmap (Q3 FY27 tentative — do not commit dates).</li>
+  <li><strong>Platforms:</strong> SaaS only (RSC-C / RSC-G). RSC-P is always customer-hosted.</li>
+  <li><strong>Best for:</strong> teams that want zero backup infrastructure and a same-day POC. This is the fastest path to a first protected workload.</li>
+</ul>
+<p><strong>Customer-hosted (the rest of this playbook):</strong> Exocompute and storage live in the customer's own AWS account. Choose this when data residency or sovereignty policy requires backups to stay inside the customer's own AWS Organization. That is the common driver for regulated APJ finance and government accounts. Also required for RSC-P.</p>
+<p class="small">One AWS account cannot use both models, but a customer can mix (some accounts BaaS, some customer-hosted). Once an account is on RMCP, all eligible workloads on it must use RMCP SLAs. Verify current RMCP workload scope and roadmap on the live compat matrix and the RMCP FAQ before quoting.</p>
+</details>
+
+<details><summary><strong>1. Single-account or multi-account model? (customer-hosted)</strong></summary>
 <p><strong>Recommendation:</strong> Two-account model. One for workloads, one for Exocompute + archive storage. Cleaner blast radius, easier IAM auditing, the standard pattern.</p>
 <p><strong>When single-account is OK:</strong> Tiny POC with one AWS account end-to-end. You'll likely outgrow it.</p>
 <p><strong>When AWS Organizations integration:</strong> 10+ accounts only. It's a one-way door — once enabled, no going back to per-account CFT.</p>
@@ -981,9 +1015,12 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 <p><strong>10+ accounts in production:</strong> Worth it. But test the rollback story before flipping the switch.</p>
 </details>
 
-<details><summary><strong>6. Where will Exocompute run?</strong></summary>
+<details><summary><strong>6. Where will Exocompute run? (customer-hosted only — skip if RMCP)</strong></summary>
+<p>These sub-choices only matter for the customer-hosted model. Under RMCP/BaaS (choice 0), Rubrik runs Exocompute in its own account and none of this applies.</p>
 <p><strong>Centralised (recommended):</strong> One host account, mapped to many workload accounts. One EKS cluster per region. Cheaper, simpler, fewer SGs to manage.</p>
 <p><strong>Per-account:</strong> Only if regulatory boundaries forbid cross-account access. Multiplies EKS clusters and Exocompute costs.</p>
+<p><strong>Public vs Private Exocompute:</strong> Private Exocompute is GA on AWS/Azure/GCP. The Kubernetes API server gets a private IP and all control-plane traffic stays inside your VPC, with no public endpoint. Security-led customers (finance, government) usually want this. It adds DNS/networking prerequisites, so decide up front. Default is public.</p>
+<p><strong>Rubrik-managed cluster vs Customer-Managed Exocompute (CME):</strong> With the default, Rubrik provisions the VPC, subnet, and cluster inside <em>your</em> account. Under CME you own the VPC/subnet/SGs and Rubrik still manages the cluster lifecycle (EKS create/upgrade/teardown). Both keep compute in your account — that's the difference from RMCP, where compute lives in Rubrik's account. Note: CME is not the same as Customer-Hosted Exocompute V2 (design-only, not shipping).</p>
 </details>
 
 <details><summary><strong>7. Where will archive S3 buckets live?</strong></summary>
@@ -1021,6 +1058,15 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <li>That role does the actual work — snapshots, archive writes, indexing.</li>
 </ol>
 <p>Show this diagram to your security team. It's the bit they care about most.</p>
+
+<details><summary><strong>Role Chaining Account — the customer-side single control point</strong></summary>
+<p>Separate from Rubrik's internal chaining above, RSC supports a customer-designated <strong>Role Chaining Account</strong>: one dedicated AWS account holding a role-chaining role that Rubrik assumes to reach every account mapped to it, including whole AWS Organizations. Two reasons security teams like it:</p>
+<ul>
+  <li><strong>One-action revocation:</strong> edit the AssumeRole policy in that single account to grant or cut Rubrik's access across all mapped accounts at once. Status flips to "Access Revoked" within ~15 minutes.</li>
+  <li><strong>Bulk onboarding:</strong> map existing accounts or an entire AWS Org to it, with a migration workflow to move already-onboarded accounts over. Onboard via the account's CFT. Only one Role Chaining Account per cloud type.</li>
+</ul>
+<p>Limit to know: assume-role calls default to 600/sec (AWS quota). At high account counts and job volume you can hit it — the customer raises it via AWS Support. Note: DSPM and Data Center Archival don't route through role chaining, so they keep working even if role-chaining access is revoked.</p>
+</details>
 
 <h3>Prerequisites</h3>
 <details open><summary><strong>AWS account IDs documented</strong></summary>
@@ -1081,6 +1127,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <li><strong>Production:</strong> /22 each if expecting >100 parallel index jobs</li>
   <li><strong>Critical:</strong> No CIDR overlap with on-prem or peered VPCs</li>
 </ul>
+<p><strong>IP Address Reduction (newer):</strong> RSC now supports AWS Custom Networking to put Exocompute pods on a separate Pod CIDR with source-NAT to the node IP, so you no longer reserve a large subnet from RFC1918 space just for pods. Existing customers get it seamlessly; new configs (or when adding a region) let you specify a Pod CIDR or leave it blank for a default. This is the AWS equivalent of the CNI Overlay model Azure already uses, and it lets IP-constrained customers run much smaller subnets than the /24–/22 guidance above. Confirm current behavior in the RSC IP-planning docs before sizing a tight environment.</p>
 </details>
 
 <details><summary><strong>Outbound internet egress</strong></summary>
@@ -1376,7 +1423,8 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <li><strong>Region:</strong> where your protected workloads live. Exocompute must be in the same region as the snapshots it processes.</li>
   <li><strong>VPC:</strong> the VPC from Foundation → Network</li>
   <li><strong>Subnets:</strong> the two AZ subnets from Foundation → Network</li>
-  <li><strong>Configuration type:</strong> leave as <strong>Rubrik-managed</strong> (BYO EKS is an edge case)</li>
+  <li><strong>Configuration type:</strong> leave as <strong>Rubrik-managed</strong> unless the customer requires Customer-Managed Exocompute (CME), where they own the VPC/subnet/SGs and Rubrik manages the cluster lifecycle</li>
+  <li><strong>Cluster type:</strong> Public (default) or Private. Choose Private if the customer needs no public Kubernetes API endpoint (control plane stays inside the VPC). Private has extra DNS/network prerequisites</li>
   <li>Save</li>
 </ol>
 
@@ -1443,7 +1491,18 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 
 <details><summary><strong>RCV (Rubrik Cloud Vault) — alternative to self-managed</strong></summary>
 <p>RCV is a Rubrik-managed archive target. Permissions and the bucket itself are in a Rubrik-owned AWS account, fully isolated from your AWS environment ("credential gap").</p>
-<p>For EC2/EBS, RCV supports the Backup tier only. For S3 workloads, both Backup AND Archive tiers. For RDS, Backup only. Not supported for DynamoDB or Aurora.</p>
+<p>For EC2/EBS, RCV supports the Backup tier only. For S3 workloads, both Backup AND Archive tiers. For RDS, Backup only. Not supported for DynamoDB or Aurora. RCV support changes often — verify on the live compat matrix.</p>
+</details>
+
+<details><summary><strong>Multiple Archival Locations (MAL) — for real 3-2-1</strong></summary>
+<p>An SLA can now write to <strong>two</strong> archival locations, not just one. This is GA for cloud VMs (EC2/EBS, and the equivalents on Azure/GCP) and, in phase 1, for S3 and Azure Blob. It's the clean way to do 3-2-1: keep one copy in a customer-hosted bucket and a second in RCV, or split across two regions or tiers.</p>
+<ul>
+  <li><strong>Selective Frequency Archival (GA Mar 2026):</strong> route daily snapshots to a cheap Standard/Hot tier for fast RTO, and weekly/monthly to Glacier/Cold for long retention. Cuts storage cost.</li>
+  <li><strong>Unstructured (S3 / Azure Blob):</strong> phase 1 sends all schedules to both locations (no selective frequency yet).</li>
+  <li>Source snapshot only expires after it lands in every configured location. Cross-region archive incurs egress — the customer pays that.</li>
+  <li>Can't mix CNP and CDM workloads in one SLA when using selective frequency.</li>
+</ul>
+<p class="small">Verify per-workload MAL support on the live compat matrix before quoting.</p>
 </details>
 
 <div class="nav-buttons">
@@ -1642,6 +1701,11 @@ li > ul, li > ol{ margin: 4px 0 6px; }
   <li>Post-script runs (e.g. resume)</li>
 </ol>
 <p>Required for transactional databases running in EC2 (SQL Server, Oracle, etc.). Adds modest latency vs crash-consistent — exact overhead depends on the pre/post-script the customer configures.</p>
+</details>
+
+<details><summary><strong>Agent-based database backup on EC2 (newer path)</strong></summary>
+<p>Beyond crash-consistent and RBS app-consistent snapshots, RSC now offers agent-based database backup for SQL Server / Oracle running on EC2, which extends the CNP BaaS model to true application-level DB protection (log backups, granular DB restore) rather than just quiescing a disk snapshot. This is a distinct capability from the app-consistent snapshot above.</p>
+<p class="small">Verify the current GA state and supported engines on the live compat matrix before scoping a POC around it.</p>
 </details>
 
 <details><summary><strong>Cross-region replication</strong></summary>
@@ -2138,7 +2202,7 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 
 <details open><summary><strong>How it works step by step</strong></summary>
 <ol class="numbered-steps">
-  <li><strong>Prerequisite:</strong> Point-in-Time Recovery (PITR) must be enabled on the table. RSC enables it automatically when you assign an SLA and sets <strong>Continuous Backup for DynamoDB (PITR) to 35 days</strong>. This cannot be reduced from RSC — it's required for incremental backups to work.</li>
+  <li><strong>Prerequisite:</strong> Point-in-Time Recovery (PITR) must be enabled on the table. RSC enables it automatically when you assign an SLA and sets <strong>Continuous Backup for DynamoDB (PITR)</strong> up to the AWS ceiling of 35 days — required for incremental backups to work. (Whether RSC still forces exactly 35 days with no adjustment is worth a quick re-check against the current AWS Cloud Native FAQ.)</li>
   <li><strong>RSC calls <code>ExportTableToPointInTime</code>:</strong> AWS DynamoDB exports the table data to an S3 bucket as JSON files. Files are compressed and encrypted with default S3 encryption.</li>
   <li><strong>Primary location is S3:</strong> Rubrik provisions a Primary S3 bucket per protected table to hold these exports. Native AWS feature — no Exocompute touches the data.</li>
   <li><strong>Lifecycle to archive:</strong> S3 lifecycle policy transitions exports from Standard → Standard-IA → Glacier per SLA. Object Lock provides immutability.</li>
@@ -2354,7 +2418,18 @@ li > ul, li > ol{ margin: 4px 0 6px; }
 </details>
 
 <details><summary><strong>RCV for S3</strong></summary>
-<p>Both Backup AND Archive tiers supported (one of the few workloads where RCV supports both). Multi-zone redundancy (MAZ) also supported for both tiers.</p>
+<p>Both Backup AND Archive tiers supported (one of the few workloads where RCV supports both). Multi-zone redundancy (MAZ) also supported for both tiers. RCV support changes often, so confirm on the live compat matrix before quoting.</p>
+</details>
+
+<details><summary><strong>Iceberg tables — a separate snappable (know the difference)</strong></summary>
+<p>Plain S3 protection backs up the raw objects. It has no idea those objects form an Iceberg table. If you restore raw S3 objects, the files come back but the table stays broken, because nothing updates the catalog to point at the restored files. A query engine like Athena or Snowflake would not see a working table.</p>
+<p>RSC now has a dedicated <strong>Iceberg</strong> snappable that backs up the Parquet/Avro data files, the Iceberg metadata and manifests, and the Glue catalog entry, and compacts small files on the way in. Data files counted under Iceberg are not double-counted under S3 for buckets you also protect. Use the Iceberg snappable, not generic S3, when the customer runs Iceberg tables on S3.</p>
+<p class="small">GA is landing in the Aug 2026 window per the roadmap. Verify current state on the live compat matrix before you commit to it in a POC.</p>
+</details>
+
+<details><summary><strong>Cloud Files (FSx + EFS) — the NAS story is changing</strong></summary>
+<p>Historically AWS file services (EFS, FSx) could only be protected with CCES / NAS Cloud Direct, not cloud-native. That is shifting: a Cloud Files path for FSx and EFS is coming into RSC as a cloud-native ("NCD") workload. If a customer asks about protecting EFS or FSx, do not reflexively say "CCES only" any more.</p>
+<p class="small">Confirm the current GA state on the live compat matrix. Until it is GA in your region, CCES / NAS Cloud Direct remains the answer.</p>
 </details>
 
 <div class="nav-buttons">
@@ -2566,6 +2641,10 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
   <div class="eyebrow">Rubrik Azure CNP · POC Playbook</div>
   <h1>Onboard Azure Cloud Native Protection — <em>end to end</em></h1>
   <p>Protect Azure VMs, managed disks, Azure SQL Database, Azure SQL Managed Instance, Azure Blob, and ADLS Gen2. Exocompute runs on AKS in your tenant.</p>
+</div>
+
+<div class="note">
+<strong>Know the Azure PaaS-DB gap before the meeting.</strong> Rubrik protects Azure SQL Database and SQL Managed Instance. It does <strong>not</strong> protect Azure Database for PostgreSQL / MySQL Flexible Server or Cosmos DB (PaaS) today — confirmed as unsupported in July 2026. Those engines are protectable only on IaaS VMs via Managed Volumes with a Cloud Cluster in-subscription. Azure PostgreSQL Flexible Server (PaaS) is in design (extending the AWS RDS pg_dump model), so treat it as roadmap, not GA. Don't say yes to PostgreSQL/MySQL/Cosmos PaaS without checking the live compat matrix.
 </div>
 
 <h2 class="section-title">Phase 1 — Foundation</h2>
@@ -2791,6 +2870,8 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 <details><summary><strong>5. Where will Exocompute run?</strong></summary>
 <p><strong>Centralised host subscription (recommended):</strong> One AKS per region, mapped to many workload subscriptions. Same pattern as AWS.</p>
 <p><strong>Per-subscription:</strong> Only if regulatory boundaries forbid cross-subscription access. Multiplies AKS clusters and cost.</p>
+<p><strong>Public vs Private AKS:</strong> Private Exocompute keeps the AKS API server inside your VNet with no public endpoint. Common ask for finance/government. Needs a private (or custom hub-and-spoke) DNS zone, so decide up front.</p>
+<p><strong>Rubrik-managed vs CME:</strong> Customer-Managed Exocompute means you own the VNet/subnet/NSGs and Rubrik manages the cluster lifecycle. Pick it only if your network team requires owning the VNet.</p>
 </details>
 
 <details><summary><strong>6. Are protected disks CMK-encrypted?</strong></summary>
@@ -3108,8 +3189,14 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
   <li><strong>Subnet:</strong> the /25 AKS subnet</li>
   <li><strong>Pod CIDR:</strong> /18 or larger, no overlap (or leave blank for default 10.244.0.0/16)</li>
   <li><strong>Authentication method:</strong> OAuth (recommended) — uses the Entra ID group permissions from Foundation → Identity</li>
+  <li><strong>Cluster type:</strong> Public (default) or Private. Private AKS keeps the Kubernetes API server on a private IP inside your VNet — the option security-led customers ask for. It needs a private DNS zone (or a custom DNS zone for hub-and-spoke), so plan it up front</li>
+  <li><strong>Management model:</strong> Rubrik-managed (default), or Customer-Managed Exocompute (CME) if the customer owns the VNet/subnet/NSGs and Rubrik only manages the cluster lifecycle</li>
   <li>Save</li>
 </ol>
+
+<div class="note warn">
+<strong>Version watch (dated 31 Jul 2026):</strong> Microsoft ended support for AKS 1.33 on 31 Jul 2026. On SaaS RSC-C, Rubrik manages the Kubernetes version, so there's no customer action. On RSC-P (private) running 2.6.3-p1 or earlier that use Azure Exocompute, upgrade to RSC-P 2.6.6+ before that date, or archival, indexing, recovery-from-archive, and new onboarding can fail. Check the current AKS/EKS version floor on the Rubrik Kubernetes compatibility matrix before a POC.
+</div>
 
 <details open><summary><strong>What gets created when AKS provisions on first use</strong></summary>
 <ul>
@@ -3164,6 +3251,11 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 <tr><td>Network access</td><td>"Enable Public Access from selected VNets and IPs" + Service Endpoint from AKS subnet</td></tr>
 </tbody>
 </table>
+</details>
+
+<details><summary><strong>Multiple Archival Locations (MAL) — for real 3-2-1</strong></summary>
+<p>Same as AWS: an SLA can write to two archival locations. GA for Azure VM/Disk (with Selective Frequency Archival, Mar 2026) and, in phase 1, for Azure Blob. Use it to keep one copy in a customer-hosted Storage Account and a second in RCV, or split across two regions/tiers (Hot for fast RTO, Cold/Archive for long retention). Source snapshot expires only after it lands in every location; cross-region archive incurs egress the customer pays.</p>
+<p class="small">Verify per-workload MAL support on the live compat matrix before quoting.</p>
 </details>
 
 <div class="nav-buttons">
@@ -3403,7 +3495,7 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
 <g>
       <rect x="70" y="240" width="200" height="60" rx="8" fill="#fdf0e3" stroke="#a84e10" stroke-width="1.5" filter="url(#shadow_azsR)"/>
       <text x="170.0" y="267.0" text-anchor="middle" font-family="Geist, sans-serif" font-size="12" font-weight="600" fill="#0d1117">Rubrik-managed SQL Server</text>
-      <text x="170.0" y="282.0" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#6b7280">rbrk-<sub_id>-<rand></text>
+      <text x="170.0" y="282.0" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#6b7280">rbrk-&lt;sub_id&gt;-&lt;rand&gt;</text>
     </g>
 <text x="170" y="320" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#a84e10">SQL DB only: DB copy here</text>
 <text x="170" y="332" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#a84e10">(in customer-specified RG)</text>
@@ -3544,6 +3636,7 @@ After Exocompute is created in Phase 2, the <code>Polaris-Exocompute-eks-worker-
   <li><strong>SQL MI</strong>: RCV NOT supported at all — use customer-managed storage account.</li>
   <li><strong>Exocompute</strong>: For both SQL DB and SQL MI, Exocompute MUST run in your Azure tenant. Rubrik-hosted Exocompute is not an option (per RCV compatibility matrix).</li>
 </ul>
+<p class="small">RCV support is expanding almost monthly. Treat the two lines above as a snapshot and confirm on the live Cloud Data Protection Compatibility Matrix before quoting.</p>
 </details>
 
 <details><summary><strong>Source documentation</strong></summary>
@@ -4012,7 +4105,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <div class="hero">
   <div class="eyebrow">Rubrik GCP · POC Playbook</div>
   <h1>Rubrik on Google Cloud — <em>scope-first</em></h1>
-  <p>GCP CNP scope is narrower than AWS/Azure: <strong>GCE instances + Persistent Disks only</strong>. For SQL/Oracle/SAP HANA/Filesets on GCP, customers deploy CCES (Rubrik CDM in GCE). Start here to figure out which path you need.</p>
+  <p>GCP CNP scope is narrower than AWS/Azure, but it is growing: <strong>GCE instances, Persistent Disks, and now Cloud SQL (PostgreSQL)</strong>. Cloud SQL Postgres went GA in April 2026. For SQL Server/Oracle/SAP HANA/Filesets on GCP, customers still deploy CCES (Rubrik CDM in GCE). Start here to figure out which path you need. <span style="color:var(--muted-2);">(GCS and BigQuery are on the roadmap, not GA. Verify current state on the live compat matrix before quoting.)</span></p>
 </div>
 
 <h2 class="section-title">Decision tree first</h2>
@@ -4022,9 +4115,10 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
   <a class="tile tile-gcp" href="#/gcp/onboard"><div class="tile-num">3</div><h3>Onboard CNP</h3><p>Add GCP project to RSC — service account key flow.</p></a>
 </div>
 
-<h2 class="section-title">CNP workloads (narrow scope)</h2>
+<h2 class="section-title">CNP workloads on GCP</h2>
 <div class="tile-grid">
-  <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4</div><h3>GCE instances + PD</h3><p>The only CNP workload type on GCP. Snapshot-based.</p></a>
+  <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4</div><h3>GCE instances + PD</h3><p>Snapshot-based. File indexing via Exocompute on GKE.</p></a>
+  <a class="tile tile-gcp" href="#/gcp/workloads/gce"><div class="tile-num">4b</div><h3>Cloud SQL (Postgres)</h3><p>GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR yet; MySQL is roadmap.</p></a>
 </div>
 
 <h2 class="section-title">For everything else: CCES on GCP</h2>
@@ -4105,7 +4199,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
   <!-- Note about narrow scope -->
   <g>
     <rect x="70" y="350" width="770" height="50" rx="8" fill="#fff8e1" stroke="#b08400" stroke-width="1.5" filter="url(#gcpshadow)"/>
-    <text x="455" y="372" text-anchor="middle" font-family="Geist, sans-serif" font-size="12" font-weight="600" fill="#5a4500">CNP scope on GCP = GCE + Persistent Disks ONLY.</text>
+    <text x="455" y="372" text-anchor="middle" font-family="Geist, sans-serif" font-size="12" font-weight="600" fill="#5a4500">CNP scope on GCP = GCE + Persistent Disks + Cloud SQL (Postgres, GA Apr 2026).</text>
     <text x="455" y="388" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#5a4500">For SQL Server / Oracle / SAP HANA / GCVE / Filesets → deploy CCES (Rubrik CDM in GCE)</text>
   </g>
 
@@ -4144,7 +4238,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>GCP</span><span class="sep">/</span><span>CNP or CCES?</span></div>
   <header class="page-head"><h1>CNP or CCES?</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
 
-<p class="lede">GCP CNP supports almost nothing compared to AWS/Azure. Get the path right before you start.</p>
+<p class="lede">GCP CNP is narrower than AWS/Azure, but no longer just VMs. It now covers GCE, Persistent Disks, and Cloud SQL (Postgres). Get the path right before you start.</p>
 
 <h3>The decision</h3>
 
@@ -4154,9 +4248,11 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <tbody>
 <tr><td>Google Compute Engine (GCE) instances</td><td>Yes — snapshot-based</td></tr>
 <tr><td>Persistent Disks</td><td>Yes — snapshot-based</td></tr>
-<tr><td>Cloud SQL (managed DB)</td><td><strong>NO</strong> — not supported via CNP</td></tr>
-<tr><td>Google Cloud Storage (GCS) buckets</td><td><strong>NO</strong> — not supported via CNP</td></tr>
-<tr><td>BigQuery, Firestore, Spanner</td><td><strong>NO</strong> — not supported</td></tr>
+<tr><td>Cloud SQL — PostgreSQL</td><td><strong>Yes</strong> — GA Apr 2026. Backup + immutable archival + RCV backup tier. No PITR yet.</td></tr>
+<tr><td>Cloud SQL — MySQL / SQL Server</td><td>Roadmap — not GA. Verify on the compat matrix.</td></tr>
+<tr><td>Google Cloud Storage (GCS) buckets</td><td>Roadmap (H2 FY26) — not GA yet</td></tr>
+<tr><td>BigQuery</td><td>Roadmap — not GA yet</td></tr>
+<tr><td>Firestore, Spanner, Bigtable</td><td><strong>NO</strong> — no Rubrik CNP path today</td></tr>
 </tbody>
 </table>
 </details>
@@ -4182,7 +4278,11 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 <strong>Most GCP customers end up deploying CCES, not CNP.</strong> If the customer is on GCP because they run SQL Server, Oracle, or SAP HANA in GCE — that's CCES, not this playbook. Use the dedicated CCES on GCP setup guide instead.
 </div>
 
-<p>If your customer's GCP scope is genuinely just <strong>GCE image-level snapshots + persistent disk snapshots</strong> — proceed with CNP. Otherwise jump to CCES.</p>
+<p>If your customer's GCP scope is <strong>GCE snapshots, persistent disks, or Cloud SQL Postgres</strong> — proceed with CNP. If they run SQL Server, Oracle, SAP HANA, or need filesets/GCVE, that's CCES.</p>
+
+<div class="note">
+<strong>Watch this space.</strong> Cloud SQL Postgres shipped in April 2026 and the GCP CNP roadmap keeps moving (GCS and BigQuery are next). The "GCP does almost nothing" reflex is out of date. Check the live compat matrix before you tell a customer no.
+</div>
 
 <div class="nav-buttons">
   <a class="btn-prev" href="#/gcp/">← GCP overview</a>
@@ -4215,7 +4315,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 
 <h3>Complete IAM permission list (CCES service account)</h3>
 <details><summary><strong>Show all 19 permissions for the custom role</strong></summary>
-<p>From the CDM v9.4 Cloud Cluster Setup Guide — these permissions are required on the service account that deploys CCES nodes and copies the image. Build a custom role with ALL of these:</p>
+<p>From the CDM Cloud Cluster Setup Guide (current CDM is 9.5.x — re-verify this list and the node sizing against the 9.5 guide before quoting) — these permissions are required on the service account that deploys CCES nodes and copies the image. Build a custom role with ALL of these:</p>
 <table class="ref-table">
 <thead><tr><th>Permission</th><th>Purpose</th></tr></thead>
 <tbody>
@@ -4356,7 +4456,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
   <div class="breadcrumb"><a href="#/">Home</a><span class="sep">/</span><span>GCP</span><span class="sep">/</span><span>GCE + Persistent Disks</span></div>
   <header class="page-head"><h1>GCE + Persistent Disks</h1><button class="print-btn" onclick="window.print()" title="Save this page as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Save as PDF</button></header>
 
-<p class="lede">The only CNP workload type on GCP. Image-level snapshots via the native Compute Engine snapshot API.</p>
+<p class="lede">The original CNP workload type on GCP (Cloud SQL Postgres joined it in Apr 2026). Image-level snapshots via the native Compute Engine snapshot API.</p>
 
 
 <h3>Backup data flow</h3>
@@ -4496,11 +4596,16 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 </ul>
 </details>
 
-<details><summary><strong>What's NOT supported via CNP on GCP</strong></summary>
+<details><summary><strong>Cloud SQL (Postgres) — now supported via CNP</strong></summary>
+<p>Cloud SQL for PostgreSQL went GA in April 2026. It is a different model from disk snapshots: RSC takes a native Cloud SQL backup, then Exocompute on GKE spins up a temporary Cloud SQL instance, runs pg_dump, and streams the logical dump to GCS. Backup, immutable archival, RCV backup tier, Multiple Archival Locations, Static Retention, and Retention Lock are all supported. PITR is not supported in the initial release. MySQL and SQL Server engines are roadmap, not GA. Verify the current engine list on the live compat matrix.</p>
+</details>
+
+<details><summary><strong>What's still NOT supported via CNP on GCP</strong></summary>
 <ul>
-  <li>Cloud SQL (use native PITR or move to CCES with self-managed DB)</li>
-  <li>GCS bucket protection (use GCS native versioning + object retention)</li>
-  <li>BigQuery, Firestore, Spanner — no Rubrik product covers these today</li>
+  <li>GCS bucket protection — roadmap (H2 FY26), not GA yet. Today: use GCS native versioning + object retention.</li>
+  <li>BigQuery — roadmap, not GA yet.</li>
+  <li>Firestore, Spanner, Bigtable — no Rubrik CNP path today.</li>
+  <li>SQL Server / Oracle / SAP HANA / filesets in GCE — CCES, not CNP.</li>
 </ul>
 </details>
 
@@ -4566,7 +4671,7 @@ az network firewall network-rule create -g &lt;rg&gt; -f &lt;fw&gt;   --collecti
 </details>
 
 <div class="note">
-This page is a pointer, not a full CCES playbook. For a step-by-step CCES on GCP deployment, see the dedicated CDM v9.4 Cloud Cluster Setup Guide.
+This page is a pointer, not a full CCES playbook. For a step-by-step CCES on GCP deployment, see the dedicated Cloud Cluster Setup Guide for your CDM release (current is CDM 9.5.x; 9.6 in planning).
 </div>
 
 
